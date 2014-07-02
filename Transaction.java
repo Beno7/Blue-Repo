@@ -18,16 +18,16 @@ public class Transaction{
     private Date deadline;
     private double price; //data type in diagram is int
     private String name; 
-    private List<Item> items;
-    private WRInventory wsr;
+    //private List<Item> items;
+   // private WRInventory wsr;
 
-    public WRInventory getWsr() {
-        return wsr;
-    }
+    //public WRInventory getWsr() {
+        //return wsr;
+    //}
 
-    public void setWsr(WRInventory wsr) {
-        this.wsr = wsr;
-    }
+    //public void setWsr(WRInventory wsr) {
+        //this.wsr = wsr;
+    //}
     
 
     public Date getDeadline() {
@@ -38,9 +38,9 @@ public class Transaction{
         return inVoice;
     }
 
-    public List<Item> getItems() {
-        return items;
-    }
+    //public List<Item> getItems() {
+        //return items;
+    //}
 
     public String getName() {
         return name;
@@ -62,9 +62,9 @@ public class Transaction{
         this.inVoice = inVoice;
     }
 
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
+    //public void setItems(List<Item> items) {
+        //this.items = items;
+    //}
 
     public void setPrice(double price) {
         this.price = price;

@@ -1,6 +1,7 @@
 
 import java.util.HashMap;
 import java.util.List;
+import  java.util.ArrayList;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -15,12 +16,29 @@ import java.util.List;
 public class Item {
     private String name;
     private String brandName;
-    private List suppliers;
+    private List<Supplier> suppliers;
     private List<Bundle> packages;
     private double unitPrice;
-    HashMap<String, Double> prices = new HashMap<>();
+    //HashMap<String, Double> prices = new HashMap<>();
 	
-    public Item(String name, String brandName, List suppliers, double unitPrice) {//made for testing
+    public Item(String name, String brandName, double unitPrice) {//made for testing
+        this.name = name;
+        this.brandName = brandName;
+        this.suppliers = new ArrayList<Supplier>();
+        this.packages = packages;
+        this.unitPrice = unitPrice;
+    }
+	
+    public Item(String name, String brandName, Supplier s, double unitPrice) {//made for testing
+        this.name = name;
+        this.brandName = brandName;
+        this.suppliers = new ArrayList<Supplier>();
+		suppliers.add(s);
+        this.packages = packages;
+        this.unitPrice = unitPrice;
+    }
+	
+    public Item(String name, String brandName, List<Supplier> suppliers, double unitPrice) {//made for testing
         this.name = name;
         this.brandName = brandName;
         this.suppliers = suppliers;
@@ -28,7 +46,7 @@ public class Item {
         this.unitPrice = unitPrice;
     }
 
-    public Item(String name, String brandName, List suppliers, List<Bundle> packages, double unitPrice) {
+    public Item(String name, String brandName, List<Supplier> suppliers, List<Bundle> packages, double unitPrice) {
         this.name = name;
         this.brandName = brandName;
         this.suppliers = suppliers;
@@ -48,7 +66,7 @@ public class Item {
         this.packages = packages;
     }
 
-    public void setSuppliers(List suppliers) {
+    public void setSuppliers(List<Supplier> suppliers) {
         this.suppliers = suppliers;
     }
 
@@ -73,21 +91,27 @@ public class Item {
         this.name = name;
     }
 
-    public void addSuppliers(List suppliers) {
+    public void addSuppliers(List<Supplier> suppliers) {
         this.suppliers = suppliers;
     }
 
-    public List getSuppliers() {
+    public void addSupplier(Supplier s) {
+        suppliers.add(s);
+    }
+
+    public List<Supplier> getSuppliers() {
         return suppliers;
     }
+	
+	public Supplier getSupplier(int ctr){
+		return suppliers.get(ctr);
+	}
 
-    public HashMap<String, Double> getPrices() {
-        return prices;
-    }
+    //public HashMap<String, Double> getPrices() {  return prices;  }
 
-    public void setPrices(HashMap<String, Double> prices) {
-        this.prices = prices;
-    }
+    //public void setPrices(HashMap<String, Double> prices) {
+        //this.prices = prices;
+    //}
     
     public void setSellPrice(double price){}
     

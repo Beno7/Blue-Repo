@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 import java.util.List;
+import java.util.ArrayList;
 /**
  *
  * @author Win 7
@@ -14,6 +15,7 @@ public class Supplier {
 
     public Supplier(String name) {//made for testing
         this.name = name;
+		supplies = new ArrayList<Item>();
     }
 
     public Supplier(List<Item> supplies, String name) {
@@ -32,10 +34,14 @@ public class Supplier {
     public void setName(String name) {
         this.name = name;
     }
+	
+	public void addSupply(Item i){
+		supplies.add(i);
+	}
 
     public void setSupplies(List<Item> supplies) {
         this.supplies = supplies;
     }
-    
-    
+
+
 }

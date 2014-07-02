@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.List;
 
 public class MainProg{
 
@@ -18,8 +19,8 @@ public class MainProg{
 	}
 	
 	public void addSupplier(){//method for adding supplier
+		System.out.println("Segment: adding Supplier");
 		do{
-			System.out.println("Segment: adding Supplier");
 			System.out.print("Enter supplier name:");
 			sN = inS.next().toUpperCase();
 			
@@ -50,8 +51,8 @@ public class MainProg{
 	}
 	
 	public void addItem(){//method for adding an item to supplier
+		System.out.println("Segment: adding item to supplier");
 		do{
-			System.out.println("Segment: adding item to supplier");
 			System.out.print("Enter supplier name:");
 			sN = inS.next().toUpperCase();
 			
@@ -83,6 +84,99 @@ public class MainProg{
 			System.out.print("Do you want to add another item to a supplier? (Y/N):");
 		} while(inS.next().equalsIgnoreCase("y"));
 		sM.printSuppliers();
+	}
+	
+	public void searchItem(){
+		System.out.println("Segment: Item search");
+		do{
+			System.out.print("Enter item's brandname:");
+			bN = inS.next().toUpperCase();
+			System.out.print("Enter item's name:");
+			N = inS.next().toUpperCase();
+			Item k = wR.searchItem(bN, N);
+			if(k!=null){
+				System.out.println("\n--------------");
+				System.out.println("Item found!!!");
+				System.out.println("brandname: " + k.getBrandName());
+				System.out.println("name: " + k.getName());
+				System.out.printf("price: %f\n", k.getUnitPrice());
+				System.out.println("Suppliers:");
+				for(int i = 0; i < k.getSuppliers().size(); i++)
+					System.out.println(k.getSupplier(i).getName());
+				System.out.println("--------------");
+			} else
+				System.out.println("Error!!! Item doesn't exist!!!");
+			System.out.print("Do you want to search for another item? (Y/N):");
+		} while(inS.next().equalsIgnoreCase("y"));
+	}
+	
+	public void searchSupplier(){
+			System.out.println("\nSegment: Supplier search");
+		do{
+			System.out.print("Enter supplier name:");
+			sN = inS.next().toUpperCase();
+			
+			bool = sM.checkDB(sN);
+			if(bool!=-1){//to check if supplier exists in its Database
+				System.out.println("Supplier Found!!!");
+				System.out.println("--------------");
+				sM.printSupplier(bool);
+				System.out.println("--------------");
+			} else
+				System.out.println("Error!!! Supplier doesn't exist!!!");
+			System.out.println("Do you want to search for another supplier? (Y/N):");
+		} while(inS.next().equalsIgnoreCase("y"));
+	}
+	
+	public void editItem(){
+		int search;
+		Double unitPrice;
+		String inS1, inS2;
+		System.out.println("\nEdit Item");
+        do{
+            List<Item> cut;
+            int itemCount = 0;
+            System.out.println("Do you want to edit an Item? (y/n) : ");
+            if(inS.next().equals("y")){
+                    System.out.println("Enter a Supplier: ");
+                    for(int i = 0; i < sM.sizeS(); i++) {
+                        System.out.println(i + ")" + sM.getS(i).getName() + "\n");
+                    }
+                    search = inS.nextInt();
+                    for(int i = 0; i < sM.sizeS(); i++){
+                        if(i == search){
+                            cut = sM.getS(i).getSupplies();
+                            System.out.println("Choose Item: ");
+                            for(int j = 0; j < cut.size(); j++){
+                                System.out.println(j + ")" + cut.get(j).getBrandName());
+                                System.out.println("  " + cut.get(j).getName());
+                                System.out.println("  " + cut.get(j).getUnitPrice());
+                                itemCount++;
+                            }
+                            search = inS.nextInt();
+                            System.out.println("ITEMCOUNT == " + itemCount);
+                            for(int a = 0; a < itemCount; a++){
+                                if(a == search){
+                                    System.out.println("ENTER CONDITION");
+                                    System.out.println("Enter new brand name: ");
+                                    inS1 = inS.next().toUpperCase();
+                                    System.out.println("Enter new item name: ");
+                                    inS2 = inS.next().toUpperCase();
+                                    System.out.println("Enter new unit price: ");
+                                    unitPrice = inS.nextDouble();
+                                    sM.getS(i).getSupplies().get(a).setBrandName(inS1);
+                                    sM.getS(i).getSupplies().get(a).setName(inS2);
+                                    sM.getS(i).getSupplies().get(a).setUnitPrice(unitPrice);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                System.out.println("Do you want to edit another Item? (y/n)");
+            }
+            else
+                break;
+        }while(inS.next().equals("y"));
 	}
 	
 	public void addItem2Supp(String N, String bN, Double price){

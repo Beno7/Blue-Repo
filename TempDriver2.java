@@ -21,6 +21,8 @@ class TempDriver2{
 		m.editItem();
 		m.searchItem();
 		
+		// add check if Bundle alreadt exist in item, if it does, update supplier pricing only.
+		//do not delete bundle or item if it still has stock.
 		//raffy's code:
 		/**/
 	}

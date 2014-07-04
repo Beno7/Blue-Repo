@@ -25,6 +25,7 @@ public class Item {
         this.name = name;
         this.brandName = brandName;
         this.suppliers = new ArrayList<Supplier>();
+		this.packages = new ArrayList<Bundle>();
         this.packages = packages;
         this.unitPrice = unitPrice;
     }
@@ -34,6 +35,7 @@ public class Item {
         this.brandName = brandName;
         this.suppliers = new ArrayList<Supplier>();
 		suppliers.add(s);
+		this.packages = new ArrayList<Bundle>();
         this.packages = packages;
         this.unitPrice = unitPrice;
     }
@@ -44,6 +46,7 @@ public class Item {
         this.suppliers = suppliers;
         this.packages = packages;
         this.unitPrice = unitPrice;
+		this.packages = new ArrayList<Bundle>();
     }
 
     public Item(String name, String brandName, List<Supplier> suppliers, List<Bundle> packages, double unitPrice) {
@@ -98,6 +101,48 @@ public class Item {
     public void addSupplier(Supplier s) {
         suppliers.add(s);
     }
+	
+	public int sizeP(){
+		return packages.size();
+	}
+	
+	public Bundle getBundle(int i){
+		return packages.get(i);
+	}
+	
+	public Bundle getBundle(String u){
+		for(int i = 0; i < sizeP(); i++){
+			if(u.equalsIgnoreCase(packages.get(i).getUnit()))
+				return packages.get(i);
+		}
+		return null;
+	}
+	
+	public HashMap<String, Double> getSPs(int i){
+		return packages.get(i).getHM();
+	}
+	
+	public boolean isUExist(String u){
+		for(int i = 0; i < sizeP(); i++){
+			if(u.equalsIgnoreCase(packages.get(i).getUnit()))
+				return true;
+		}
+		return false;
+	}
+	
+	public void addSuppBundle(Supplier s, Double sP, String b, int m, Double p, String bN, String N){
+		packages.add(new Bundle(b, m, p, bN, N));
+		packages.get(sizeP()-1).addSuppPrice(s, sP);
+	}
+	
+	public void delSuppBundle(String s){
+		for(int i = 0; i < packages.size(); i++)
+			if(packages.get(i).suppExist(s))
+				if(packages.get(i).getHMSize()==1)
+					packages.remove(i);
+				else
+					packages.remove(s);
+	}
 
     public List<Supplier> getSuppliers() {
         return suppliers;

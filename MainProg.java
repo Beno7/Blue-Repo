@@ -6,6 +6,9 @@ public class MainProg{
 	private	Scanner inS;
 	private	String sN;//supplier name
 	private	String bN, N;//Items primary key
+	private String u;// unit of bundle
+	private int m;// measurement of a bundle
+	private Double pSP, sP;// sell price of a package, suppliers price for the item
 	private	Double price;//price of Item
 	private	WRInventory wR;//instance of inventory
 	private	Item tempI;//temporary Item variable
@@ -36,10 +39,12 @@ public class MainProg{
 				bN = inS.next().toUpperCase();
 				System.out.print("Enter item's name:");
 				N = inS.next().toUpperCase();
-				System.out.print("Enter item's price:");
-				price = inS.nextDouble();
-				if(!sM.checkSupplyExist(bN, N, sM.getLS()))
+				if(!sM.checkSupplyExist(bN, N, sM.getLS())){
+					System.out.print("Enter item's price:");
+					price = inS.nextDouble();
 					addItem2Supp(N, bN, price);//adds item to supplier and wRInventory
+					addPackage();
+				}
 				else
 					System.out.println("Error, supplier already supplies the said item");
 				System.out.print("Do you want to add another item to this supplier? (Y/N):");
@@ -67,9 +72,9 @@ public class MainProg{
 					bN = inS.next().toUpperCase();
 					System.out.print("Enter item's name:");
 					N = inS.next().toUpperCase();
-					System.out.print("Enter item's price:");
-					price = inS.nextDouble();
 					if(!sM.checkSupplyExist(bN, N, sM.getLS())){
+						System.out.print("Enter item's price:");
+						price = inS.nextDouble();
 						addItem2Supp(N, bN, price);//adds item to supplier and wRInventory
 						sM.printSupplier(sM.sizeS()-1);
 					}
@@ -180,12 +185,36 @@ public class MainProg{
 	}
 	
 	public void addItem2Supp(String N, String bN, Double price){
-		tempI = new Item(N, bN, sM.getLS(), price);
+		tempI = new Item(N, bN, sM.getLS(), price);// adds the supplier to item
 		if(wR.searchItem(tempI.getBrandName(), tempI.getName())==null)//if item doesn't exist yet
-			wR.addItem(tempI);//adds the added item to the list of inventory
+			wR.addItem(tempI);//adds the item to the list of inventory
 		else//if item exists in the WRInventory
-			wR.addSupplier(bN, N, sM.getLS()); //adds the latest supplier to the recently added item			
+			wR.addSupplier(bN, N, sM.getLS()); //adds supplier to the item existing in wRInventory			
 		sM.getLS().addSupply(wR.searchItem(tempI.getBrandName(), tempI.getName()));//adds the added item to supplier
+	}
+	
+	public void addPackage(){
+		System.out.print("Do you want to add a package to this item? (Y/N):");
+		while(inS.next().equalsIgnoreCase("y")){
+			System.out.print("Enter package name: ");
+			u = inS.next().toUpperCase();
+			Item c = wR.searchItem(bN, N);
+			if(!c.isUExist(u)){
+				System.out.print("Enter how many "+c.getBrandName()+" "+c.getName()+" does the package contain: ");
+				m = inS.nextInt();
+				System.out.print("Enter how much supplier "+sM.getLS().getName()+" sells 1 "+u+": ");
+				sP = inS.nextDouble();
+				System.out.print("Enter package sell price: ");
+				pSP = inS.nextDouble();
+				wR.getLI().addSuppBundle(sM.getLS(), sP, u, m, pSP, bN, N);
+			} else{
+				System.out.print("Updating package...");
+				System.out.print("Enter how much supplier "+sM.getLS().getName()+" sells 1 "+u+": ");
+				sP = inS.nextDouble();
+				c.getBundle(u).addSuppPrice(sM.getLS(), sP);
+			}
+			System.out.print("Do you want to add another package to this item? (Y/N):");
+		}
 	}
 	
 	public void overW(){

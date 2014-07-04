@@ -45,27 +45,27 @@ public class WRInventory {
 			if(items.get(i).getBrandName().equals(bN)&&items.get(i).getName().equals(n)){
 				items.get(i).addSupplier(s);
 				break;
-			}
-					
+			}	
 	}
 	
 	public void delSupplier(Supplier s){
-		int bool = -1;
 		for(int i = 0; i < items.size(); i++){
 			for(int j = 0; j < items.get(i).getSuppliers().size(); j++)
 				if(items.get(i).getSuppliers().get(j).getName().equals(s.getName())){
-					bool = j;
+					if(items.get(i).getSuppliers().size()==1){
+						items.remove(i);
+						i-=1;
+					} else{
+						items.get(i).getSuppliers().remove(j);
+						items.get(i).delSuppBundle(s.getName());
+					}
 					break;
 				}
-			if(bool != -1){
-				if(items.get(i).getSuppliers().size()==1){
-					items.remove(i);
-					i-=1;
-				} else
-					items.get(i).getSuppliers().remove(bool);
-				bool = -1;
-			}
 		}
+	}
+	
+	public Item getLI(){
+		return items.get(items.size()-1);
 	}
 	
 	public List<Item> getItems(){

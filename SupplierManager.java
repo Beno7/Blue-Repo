@@ -92,6 +92,16 @@ public class SupplierManager {
 			System.out.println("Suppliers: ");
 			for(int y = 0; y < k.getSuppliers().size(); y++)
 				System.out.println(k.getSuppliers().get(y).getName());
+			System.out.println("Bundles: ");
+			for(int y = 0; y < k.sizeP(); y++){
+				System.out.println("Name: "+k.getBundle(y).getUnit());
+				System.out.println("number of"+k.getBrandName()+" "+k.getName()+": "+k.getBundle(y).getMeasurement());
+				System.out.println("package sellprice: "+k.getBundle(y).getPackSellPrice());
+				System.out.println("Supplier's pricing:");
+				Bundle a = k.getBundle(y);
+				for(int z = 0; z < a.getHMSize(); z++)
+					System.out.println(a.getSupp(z)+": "+a.elemHM(a.getSupp(z)));
+			}
 			System.out.println();
 		}
 	}

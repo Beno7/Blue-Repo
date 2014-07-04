@@ -4,34 +4,103 @@
  * and open the template in the editor.
  */
 
+import java.util.HashMap;
+import java.util.ArrayList;
+
 /**
  *
  * @author Win 7
  */
 public class Bundle {
-    private int unit;
+    private String unit;
     private int measurement;
-    private int packSellPrice;
+    private Double packSellPrice;//user's dictated price to the item
+	private HashMap<String, Double> prices;
+	private ArrayList<String> supp;
+	private String brandName, name;
 
+	public Bundle(String u, int m, Double pSP, String bN, String N){
+		setUnit(u);
+		setMeasurement(m);
+		setPackSellPrice(pSP);
+		supp = new ArrayList<String>();
+		prices = new HashMap<String, Double>();
+		
+	}
+	
+	public void delSupplier(String s){
+		prices.remove(s);
+		supp.remove(s);
+	}
+	
     public int getMeasurement() {
         return measurement;
     }
 
-    public int getPackSellPrice() {
+    public Double getPackSellPrice() {
         return packSellPrice;
     }
+	
+	public Double getPrice(Supplier s){
+		return prices.get(s.getName());
+	}
+	
+	public String getSupp(int i){
+		return supp.get(i);
+	}
+	
+	public HashMap<String, Double> getHM(){
+		return prices;
+	}
+	
+	public String getUnit(){
+		return unit;
+	}
+	
+	public int getHMSize(){
+		return prices.size();
+	}
+	
+	public Double elemHM(String s){
+		return prices.get(s);
+	}
+	
+	public boolean suppExist(String s){
+		return prices.containsKey(s);
+	}
 
     public void setMeasurement(int measurement) {
         this.measurement = measurement;
     }
+	
+	public void addSuppPrice(Supplier s, Double p){
+		prices.put(s.getName(), p);
+		supp.add(s.getName());
+	}
 
-    public void setPackSellPrice(int packSellPrice) {
+    public void setPackSellPrice(Double packSellPrice) {
         this.packSellPrice = packSellPrice;
     }
 
-    public void setUnit(int unit) {
+    public void setUnit(String unit) {
         this.unit = unit;
     }
 
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+   
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public String getName() {
+        return name;
+    }	
+	
     
 }

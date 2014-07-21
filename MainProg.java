@@ -55,7 +55,7 @@ public class MainProg{
 			else{
 				System.out.print("Supplier already exists, overwrite? (y/n):");
 				overW();
-			}*/
+			}*///
 			do{
 				System.out.print("Enter item's brand:");
 				bN = inS.next().toUpperCase();

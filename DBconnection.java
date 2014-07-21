@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
+package Connection;
 
 
 import java.sql.Connection;
@@ -11,7 +11,7 @@ public abstract class DBconnection {
     private String driverName = "com.mysql.jdbc.Driver";
     private String url = "jdbc:mysql://localhost:3306/introseDb"; 
     private String username = "root";
-    private String password = "";
+    private String password = "23243Ts$";
     
      public static DBconnectionImpl getInstance(){
 

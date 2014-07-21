@@ -7,6 +7,8 @@ package Logic;
 
 import java.util.List;
 import java.util.ArrayList;
+import Implementation.SupplierImpl;
+import Implementation.TransactionImpl;
 /**
  *
  * @author Win 7
@@ -14,56 +16,73 @@ import java.util.ArrayList;
 public class SupplierManager {
     private List<Supplier> suppliers;
 
+	//private List<Supplier> s;
+	private SupplierImpl sI;
+        private TransactionImpl tI;
+	
 	public SupplierManager(){
-		suppliers = new ArrayList<Supplier>();
+		sI = new SupplierImpl();
+                tI = new TransactionImpl();
+	}	
+	
+	public Supplier getS(String supplier){
+		return sI.getSupplier(supplier);
 	}
 	
-	public SupplierManager(List<Supplier> s){
-		setSupplier(s);
+	public void addS(Supplier supplier){
+		sI.addSupplier(supplier);
 	}
 	
-	
-    public Supplier searchSuppliers(String supplier) {
-		Supplier s = null;
-		for(int i = 0; i < suppliers.size(); i++)
-			if(supplier.equalsIgnoreCase(suppliers.get(i).getName()))
-				return suppliers.get(i);
-        return null;
-    }
-	
-	public Supplier getS(int ctr){//returns supplier of the given index
+	public Supplier getS(int ctr){
 		return suppliers.get(ctr);
 	}
 	
-	public Supplier getLS(){//returns the last added supplier
-		return suppliers.get(sizeS()-1);
-	}
-	
-	public void addS(Supplier s){// add supplier to  suppliers list
-		suppliers.add(s);
-	}
-	
-	public int sizeS(){//returns the size of the supplier List
+	public int sizeS(){
 		return suppliers.size();
 	}
-    
-	public void setSupplier(List<Supplier> s){
+	
+	public void setAllSupplier(List<Supplier> s){
 		this.suppliers = s;
 	}
 	
-	public void swap(int bool, Supplier sN){//overwrites the supplier
-		suppliers.remove(bool);
-		suppliers.add(sN);
+	public List<Supplier> getAllSupplier(){
+		setAllSupplier(sI.getAllSupplier());
+		return suppliers;
 	}
 	
-	public int checkDB(String name){//searches the database and returns the index of the supplier
-		for(int i = 0; i < sizeS(); i++)
-			if(name.equalsIgnoreCase(getS(i).getName()))
-				return i;
-		return -1;
+	public void printSuppliers(){
+		setAllSupplier(sI.getAllSupplier());
+		System.out.println("--------------");
+        for(int i = 0; i < sizeS(); i++){
+			printSupplier(i);
+			System.out.println("--------------");
+		}
 	}
 	
-	public void printSuppliers(){//prints each supplier's information
+	public void printSupplier(int i){
+		System.out.println();
+        System.out.print("Supplier name: ");
+        System.out.println(getS(i).getName());
+        System.out.print("Contact number: ");
+        System.out.println(getS(i).getContact());
+	}
+        
+        public void printAllTransactions(){
+            setAllSupplier(sI.getAllSupplier());
+            for(int i = 0; i < sizeS(); i++){
+                getS(i).setHistory();
+                for(int j = 0; j < getS(i).sizeH(); j++){
+                    getS(i).getH(j).printTrans();
+                    //getS(i).getH(j).printBreakDown();
+                }
+            }
+        }
+        public void printTransaction(String iV){
+            tI.getSupplierTransaction(iV).printTrans();
+        }
+    
+	
+	/*public void printSuppliers(){//prints each supplier's information
 		System.out.println("--------------");
         for(int i = 0; i < sizeS(); i++){
 			printSupplier(i);
@@ -107,6 +126,5 @@ public class SupplierManager {
 			}
 			System.out.println();
 		}
-	}
-    
+	}*/
 }

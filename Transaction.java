@@ -23,6 +23,11 @@ public abstract class Transaction{
     private HashMap<String, Integer> qty;
     private HashMap<String, Double> prices;
 	
+        public Transaction(){
+		qty = new HashMap<String, Integer>();
+		prices = new HashMap<String, Double>();
+        }
+
 	public Transaction(String iV, Date dBuy){
 		setInVoice(iV);
 		setBuyDate(dBuy);
@@ -62,7 +67,9 @@ public abstract class Transaction{
     public void setBuyDate(Date buyDate) {
         this.dBuy = buyDate;
     }
-
+    public void setBuyDate(java.sql.Date d){
+	dBuy = new java.util.Date(d.getTime());
+    }
     public Date getBuyDate() {
         return dBuy;
     }

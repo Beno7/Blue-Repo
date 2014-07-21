@@ -14,6 +14,8 @@ public class MainProg{
 	private String u;// unit of bundle
 	private String oN; // office name
 	private String iV; // inVoice
+	private Office tO;
+        private Bundle c;
 	private int m;// measurement of a bundle
 	private Double pSP, sP;// sell price of a package, suppliers price for the item
 	private	Double price;//price of Item
@@ -23,6 +25,7 @@ public class MainProg{
 	private	SupplierManager sM;
 	private OfficeManager oM;
 	private TransactionDB sTM;
+	private BundleManager bM;
 	
 	public MainProg(){
 		this.inS = new Scanner(System.in);
@@ -30,6 +33,7 @@ public class MainProg{
 		this.sM = new SupplierManager();
 		this.oM = new OfficeManager();
 		this.sTM = new TransactionDB();
+		this.bM = new BundleManager();
 	}
 	
 	public void addSupplier(){//method for adding supplier
@@ -37,20 +41,49 @@ public class MainProg{
 		do{
 			System.out.print("Enter supplier name:");
 			sN = inS.next().toUpperCase();
+			while(sM.getS(sN) != null){
+				System.out.println("Error: Supplier already Exists!\nEnter Again!");
+				System.out.print("Enter supplier name:");
+				sN = inS.next().toUpperCase();
+			}
+			System.out.print("Enter contact number:");
+			sM.addS(new Supplier(sN, inS.next()));
 			
-			bool = sM.checkDB(sN);
+			/*bool = sM.checkDB(sN);
 			if(bool==-1)//to check if supplier exists in its Database
 				sM.addS(new Supplier(sN));
 			else{
 				System.out.print("Supplier already exists, overwrite? (y/n):");
 				overW();
-			}
+			}*/
 			do{
 				System.out.print("Enter item's brand:");
 				bN = inS.next().toUpperCase();
 				System.out.print("Enter item's name:");
 				N = inS.next().toUpperCase();
-				if(!sM.checkSupplyExist(bN, N, sM.getLS())){
+				System.out.print("Enter package name: ");
+				u = inS.next().toUpperCase();
+				if(bM.getB(bN, N, u)==null){
+					System.out.print("Enter how many "+bN+" "+N+" does the package contain: ");
+					m = inS.nextInt();
+					System.out.print("Enter how much supplier "+sM.getS(sN).getName()+" sells 1 "+u+": ");
+					sP = inS.nextDouble();
+					System.out.print("Enter package sell price: ");
+					pSP = inS.nextDouble();
+					c = new Bundle(u, m, pSP, bN, N);
+					c.addSuppPrice(sM.getS(sN), sP);
+					bM.addB(c);
+                                        c.addPricetoDB(sM.getS(sN), sP);
+				} else{
+                                        c = bM.getB(bN, N, u);
+					System.out.print("Updating package...");
+					System.out.print("Enter how much supplier "+sM.getS(sN).getName()+" sells 1 "+u+": ");
+                                        sP = inS.nextDouble();
+					c.addSuppPrice(sM.getS(sN), sP);
+                                        c.addPricetoDB(sM.getS(sN), sP);
+				}
+				System.out.print("Do you want to add another package to this supplier? (Y/N):");
+				/*if(!sM.checkSupplyExist(bN, N, sM.getLS())){
 					System.out.print("Enter item's price:");
 					price = inS.nextDouble();
 					addItem2Supp(N, bN, price);//adds item to supplier and wRInventory
@@ -58,7 +91,7 @@ public class MainProg{
 				}
 				else
 					System.out.println("Error, supplier already supplies the said item");
-				System.out.print("Do you want to add another item to this supplier? (Y/N):");
+				System.out.print("Do you want to add another item to this supplier? (Y/N):");*/
 			} while(inS.next().equalsIgnoreCase("y"));
 			System.out.println();
 			System.out.print("Do you want to add another supplier? (Y/N):");
@@ -66,7 +99,7 @@ public class MainProg{
 		sM.printSuppliers();
 	}
 	
-	public void addItem(){//method for adding an item to supplier
+	/*public void addItem(){//method for adding an item to supplier
 		System.out.println("Segment: adding item to supplier");
 		do{
 			System.out.print("Enter supplier name:");
@@ -124,9 +157,9 @@ public class MainProg{
 				System.out.println("Error!!! Item doesn't exist!!!");
 			System.out.print("Do you want to search for another item? (Y/N):");
 		} while(inS.next().equalsIgnoreCase("y"));
-	}
+	}*/
 	
-	public void searchSupplier(){
+	/*public void searchSupplier(){
 			System.out.println("\nSegment: Supplier search");
 		do{
 			System.out.print("Enter supplier name:");
@@ -142,39 +175,126 @@ public class MainProg{
 				System.out.println("Error!!! Supplier doesn't exist!!!");
 			System.out.println("Do you want to search for another supplier? (Y/N):");
 		} while(inS.next().equalsIgnoreCase("y"));
-	}
+	}*/
 	
 	public void addOffice(){
 			System.out.println("\nSegment: add Wholesale Retail Customer");
 		do{
 			System.out.print("Enter customer name:");
 			oN = inS.next().toUpperCase();
+			while(oM.getO(oN) != null){
+				System.out.println("Error: Customer already Exists!\nEnter Again!");
+				System.out.print("Enter customer name:");
+				oN = inS.next().toUpperCase();
+			}
+			System.out.print("Enter customer's contact number:");
+			tO = new Office(oN, inS.next());
 			
-			bool = oM.checkDB(oN);
-			if(bool==-1){//to check if supplier exists in its Database
+			/*if(getO(oN)==null){//to check if supplier exists in its Database
 				System.out.print("Enter customer's contact number:");
 				oM.addO(new Office(oN, inS.next()));
 			}
-			else{
+			/*else{
 				System.out.print("Office already exists, overwrite? (y/n):");
 				overWO();
 			}
 			System.out.print("Do you want to add another contact number to the supplier? (Y/N): ");
 			while(inS.next().equalsIgnoreCase("y")){
 				System.out.print("Enter contact number:");
-				oM.getLO().addContact(inS.next());
+				tO.addContact(inS.next());
 				System.out.print("Do you want to add another contact number to the supplier? (Y/N): ");
-			}
+			}*/
+			oM.addO(tO);
 			System.out.println("Do you want to add another customer? (Y/N):");
 		} while(inS.next().equalsIgnoreCase("y"));
 		oM.printOffices();
+	}
+	
+	public void buySupply(){
+		System.out.println("\nSegment: buying supply");
+		Item i;
+		Bundle b;
+		String s, s1, s2, b1;
+		int ctr, count;
+		Double d;
+		Calendar c;
+		Date d1;
+		STransaction sT = null;
+		do{
+			System.out.println("Items available:");
+			bM.printNames();
+			System.out.print("Enter BrandName: ");
+			s1 = inS.next().toUpperCase();
+			System.out.print("Enter Name: ");
+			s2 = inS.next().toUpperCase();
+			System.out.println("Packages available for "+s1+" "+s2+":");
+			bM.printBundles(s1, s2);
+			System.out.println("Enter package: ");
+			b1 = inS.next().toUpperCase();
+			b = bM.getB(s1, s2, b1);
+			System.out.println("Suppliers supplying "+s1+" "+s2+" "+b1+" and their pricing: ");
+			b.printSuppliers();
+			System.out.print("Enter Supplier: ");
+			s = inS.next().toUpperCase();
+                        d = b.elemHM(s);
+                        System.out.println(d);
+			
+			
+			System.out.print("Do you want to create a transaction with Supplier "+s+"? (Y/N): ");
+			if(inS.next().equalsIgnoreCase("y")){
+				System.out.print("Enter Invoice: ");
+				iV = inS.next();
+				System.out.print("Enter how many will be bought: ");
+				count = inS.nextInt();
+				c = new GregorianCalendar();
+				c.set(Calendar.HOUR_OF_DAY, 0); //anything 0 - 23
+				c.set(Calendar.MINUTE, 0);
+				c.set(Calendar.SECOND, 0);
+				d1 = c.getTime(); 
+				sT = new STransaction(iV, d1, s);
+				sT.addSell(b, d, count);
+				System.out.println("Do you want to add another item to this transaction? (Y/N):");
+                                
+				while(inS.next().equalsIgnoreCase("y")){
+                                        System.out.println("Items under "+s+": ");
+                                        bM.printNames(s);
+                                        System.out.print("Enter Item's BrandName: ");
+                                        s1 = inS.next().toUpperCase();
+                                        System.out.print("Enter Item's Name: ");
+                                        s2 = inS.next().toUpperCase();
+					System.out.println("Bundles:");
+					bM.printBundles(s1, s2, s);
+                                        System.out.print("Enter bundle chosen: ");
+                                        b1 = inS.next().toUpperCase();
+                                        b = bM.getB(s1, s2, b1);
+                                        d = b.elemHM(s);
+                                        System.out.println(s+"'s pricing: "+d);
+                                        System.out.print("Enter how many will be bought: ");
+                                        count = inS.nextInt();
+                                        sT.addSell(b, d, count);
+					System.out.println("Do you want to add another item to this transaction? (Y/N):");
+				}
+				System.out.print("Enter terms of payment: ");
+				sT.setTerm(inS.nextInt());
+			}
+			System.out.println("Are you sure you want to add this transaction?");
+			if(inS.next().equalsIgnoreCase("y")){
+				sT.updateStocks();
+                                sM.getS(s).addSTransaction(sT);
+                                sT.updateBundleList();
+				sM.printAllTransactions();
+			} 
+			sM.printSuppliers();
+			System.out.println("Do you want to add another transaction? (Y/N):");
+		} while(inS.next().equalsIgnoreCase("y"));
+		
 	}
 	
 	public void sellSupply(){
 		System.out.println("\nSegment: selling supply");
 		Item i;
 		Bundle b;
-		String s;
+		String s, s1, s2, b1;
 		int ctr, count;
 		Double d;
 		Calendar c;
@@ -184,9 +304,9 @@ public class MainProg{
 		Office o;
 		do{
 			System.out.println("Offices:");
-			oM.printOfficesOpt();
-			System.out.print("Enter office's number: ");
-			o = oM.getO(inS.nextInt());
+			oM.printOffices();
+			System.out.print("Enter office name: ");
+			o = oM.getO(inS.next().toUpperCase());
 			System.out.print("Do you want to create a transaction with "+o.getName()+"? (Y/N): ");
 			if(inS.next().equalsIgnoreCase("y")){
 				System.out.print("Enter Invoice: ");
@@ -197,49 +317,42 @@ public class MainProg{
 				c.set(Calendar.SECOND, 0);
 				d1 = c.getTime(); 
 				sT = new OTransaction(iV, d1, o.getName());
-				sTM.addOTrans(sT);
 				System.out.print("Enter terms of payment: ");
 				sT.setTerm(inS.nextInt());
 				do{
-					System.out.println("Known items supplied by suppliers:");
-					wR.printItems();
-					System.out.print("Enter item's number: ");
-					i = wR.getItem(inS.nextInt());
-					
-					System.out.println("Known packages of "+i.getBrandName()+" "+i.getName()+" supplied by suppliers:");
-					i.printBundles();
-					System.out.print("Enter bundle's number: ");
-					b = i.getBundle(inS.nextInt());
-					
+                                        bM.printNames();
+                                        System.out.print("Enter BrandName: ");
+                                        s1 = inS.next().toUpperCase();
+                                        System.out.print("Enter Name: ");
+                                        s2 = inS.next().toUpperCase();
+                                        System.out.println("Packages available for "+s1+" "+s2+":");
+                                        bM.printBundles(s1, s2);
+                                        System.out.println("Enter package: ");
+                                        b1 = inS.next().toUpperCase();
+                                        b = bM.getB(s1, s2, b1);
 					System.out.println("Stock and their corresponding sellprice:");
 					b.printSuppliers2();
 					d = b.getPackSellPrice();
 					System.out.print("Enter how many will be bought: ");
 					count = inS.nextInt();
-					sT = sTM.getOTrans(sTM.sizeO()-1);
-					if(sT.checkStocks())
-						sT.addSell(b, d, count);
-					else{
-						System.out.print("You do not have enough stocks");
-						break;
-					}
+					sT.addSell(b, d, count);
 					System.out.println("Do you want to add another item to this transaction? (Y/N):");
 				} while(inS.next().equalsIgnoreCase("y"));
 				System.out.println("Are you sure you want to add this transaction?");
 				if(inS.next().equalsIgnoreCase("y")){
 					sT.updateStocks();
-					sTM.printOTrans(sTM.sizeS()-1);
-				} else{
-					sTM.rLOTrans();
-				}
-				sM.printSuppliers();
+                                        oM.getO(o.getName()).addOTransaction(sT);
+                                        sT.updateBundleList();
+                                        oM.printAllTransactions();
+				} 
+				oM.printOffices();
 				System.out.println("Do you want to add another transaction? (Y/N):");
 			}
 		} while(inS.next().equalsIgnoreCase("y"));
 		
 	}
 	
-	public void editItem(){
+	/*public void editItem(){
 		int search;
 		Double unitPrice;
 		String inS1, inS2;
@@ -321,9 +434,9 @@ public class MainProg{
 			}
 			System.out.print("Do you want to add another package to this item? (Y/N):");
 		}
-	}
+	}*/
 	
-	public void buySupply(){
+	/*public void buySupply(){
 		System.out.println("\nSegment: buying supply");
 		Item i;
 		Bundle b;
@@ -403,9 +516,9 @@ public class MainProg{
 			System.out.println("Do you want to add another transaction? (Y/N):");
 		} while(inS.next().equalsIgnoreCase("y"));
 		
-	}
+	}*/
 	
-	public void overW(){
+	/*public void overW(){
 		if(inS.next().equalsIgnoreCase("y")){
 			sM.swap(bool, new Supplier(sN));//overwrites the supplier
 			wR.delSupplier(new Supplier(sN));
@@ -417,5 +530,5 @@ public class MainProg{
 			System.out.print("Enter customer's contact number:");
 			oM.swap(bool, new Office(oN, inS.next()));//overwrites the supplier
 		}
-	}
+	}*/
 }

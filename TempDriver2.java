@@ -2,7 +2,7 @@
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
-import Logic.*;
+import Logic.MainProg;
 
 class TempDriver2{
 	
@@ -10,18 +10,16 @@ class TempDriver2{
 		//Beno's attributes
 		//List<Supplier> dBS = new ArrayList<Supplier>();
 		
-		//Raffy's attributes
+		/*//Raffy's attributes
 		String loopScan, inS1, inS2;
 		double unitPrice;
-		int search;
+		int search;*/
 		
-		//Beno's code:
 		MainProg m = new MainProg();
-		//m.addOffice();
 		m.addSupplier();//adds supplier
 		m.buySupply();
 		m.addOffice();
-		m.sellSupply();
+                m.sellSupply();
 		/*m.addItem();//adds item
 		m.searchSupplier();
 		m.editItem();

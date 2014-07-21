@@ -3,6 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package Logic;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,10 +18,6 @@ public class WRInventory {
     public WRInventory(){
 		items = new ArrayList<Item>();
 	}
-	
-    public void updateStock(String brandName,String name,String stock){
-    
-    }
 	
 	public void addItem(Item i){
 		items.add(i);
@@ -62,6 +60,11 @@ public class WRInventory {
 					break;
 				}
 		}
+	}
+	
+	public void printItems(){
+		for(int i = 0; i < items.size(); i++)
+			System.out.println(i+". "+items.get(i).getBrandName()+" "+items.get(i).getName());
 	}
 	
 	public Item getLI(){

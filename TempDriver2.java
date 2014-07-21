@@ -1,6 +1,8 @@
+
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
+import Logic.*;
 
 class TempDriver2{
 	
@@ -15,16 +17,16 @@ class TempDriver2{
 		
 		//Beno's code:
 		MainProg m = new MainProg();
+		//m.addOffice();
 		m.addSupplier();//adds supplier
-		m.addItem();//adds item
+		m.buySupply();
+		m.addOffice();
+		m.sellSupply();
+		/*m.addItem();//adds item
 		m.searchSupplier();
 		m.editItem();
-		m.searchItem();
+		m.searchItem();*/
 		
-		// add check if Bundle alreadt exist in item, if it does, update supplier pricing only.
-		//do not delete bundle or item if it still has stock.
-		//raffy's code:
-		/**/
 	}
 	
 }

@@ -8,6 +8,8 @@
  *
  * @author Win 7
  */
+package Logic;
+
 public class Sales {
     
 }

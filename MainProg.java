@@ -1,5 +1,10 @@
+
+package Logic;
 import java.util.Scanner;
 import java.util.List;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Date;
 
 public class MainProg{
 
@@ -7,6 +12,8 @@ public class MainProg{
 	private	String sN;//supplier name
 	private	String bN, N;//Items primary key
 	private String u;// unit of bundle
+	private String oN; // office name
+	private String iV; // inVoice
 	private int m;// measurement of a bundle
 	private Double pSP, sP;// sell price of a package, suppliers price for the item
 	private	Double price;//price of Item
@@ -14,11 +21,15 @@ public class MainProg{
 	private	Item tempI;//temporary Item variable
 	private	int bool;//to check if supplier exists in db
 	private	SupplierManager sM;
+	private OfficeManager oM;
+	private TransactionDB sTM;
 	
 	public MainProg(){
 		this.inS = new Scanner(System.in);
 		this.wR = new WRInventory();
 		this.sM = new SupplierManager();
+		this.oM = new OfficeManager();
+		this.sTM = new TransactionDB();
 	}
 	
 	public void addSupplier(){//method for adding supplier
@@ -133,6 +144,101 @@ public class MainProg{
 		} while(inS.next().equalsIgnoreCase("y"));
 	}
 	
+	public void addOffice(){
+			System.out.println("\nSegment: add Wholesale Retail Customer");
+		do{
+			System.out.print("Enter customer name:");
+			oN = inS.next().toUpperCase();
+			
+			bool = oM.checkDB(oN);
+			if(bool==-1){//to check if supplier exists in its Database
+				System.out.print("Enter customer's contact number:");
+				oM.addO(new Office(oN, inS.next()));
+			}
+			else{
+				System.out.print("Office already exists, overwrite? (y/n):");
+				overWO();
+			}
+			System.out.print("Do you want to add another contact number to the supplier? (Y/N): ");
+			while(inS.next().equalsIgnoreCase("y")){
+				System.out.print("Enter contact number:");
+				oM.getLO().addContact(inS.next());
+				System.out.print("Do you want to add another contact number to the supplier? (Y/N): ");
+			}
+			System.out.println("Do you want to add another customer? (Y/N):");
+		} while(inS.next().equalsIgnoreCase("y"));
+		oM.printOffices();
+	}
+	
+	public void sellSupply(){
+		System.out.println("\nSegment: selling supply");
+		Item i;
+		Bundle b;
+		String s;
+		int ctr, count;
+		Double d;
+		Calendar c;
+		Date d1;
+		Supplier suppT;
+		OTransaction sT = null;
+		Office o;
+		do{
+			System.out.println("Offices:");
+			oM.printOfficesOpt();
+			System.out.print("Enter office's number: ");
+			o = oM.getO(inS.nextInt());
+			System.out.print("Do you want to create a transaction with "+o.getName()+"? (Y/N): ");
+			if(inS.next().equalsIgnoreCase("y")){
+				System.out.print("Enter Invoice: ");
+				iV = inS.next();
+				c = new GregorianCalendar();
+				c.set(Calendar.HOUR_OF_DAY, 0); //anything 0 - 23
+				c.set(Calendar.MINUTE, 0);
+				c.set(Calendar.SECOND, 0);
+				d1 = c.getTime(); 
+				sT = new OTransaction(iV, d1, o.getName());
+				sTM.addOTrans(sT);
+				System.out.print("Enter terms of payment: ");
+				sT.setTerm(inS.nextInt());
+				do{
+					System.out.println("Known items supplied by suppliers:");
+					wR.printItems();
+					System.out.print("Enter item's number: ");
+					i = wR.getItem(inS.nextInt());
+					
+					System.out.println("Known packages of "+i.getBrandName()+" "+i.getName()+" supplied by suppliers:");
+					i.printBundles();
+					System.out.print("Enter bundle's number: ");
+					b = i.getBundle(inS.nextInt());
+					
+					System.out.println("Stock and their corresponding sellprice:");
+					b.printSuppliers2();
+					d = b.getPackSellPrice();
+					System.out.print("Enter how many will be bought: ");
+					count = inS.nextInt();
+					sT = sTM.getOTrans(sTM.sizeO()-1);
+					if(sT.checkStocks())
+						sT.addSell(b, d, count);
+					else{
+						System.out.print("You do not have enough stocks");
+						break;
+					}
+					System.out.println("Do you want to add another item to this transaction? (Y/N):");
+				} while(inS.next().equalsIgnoreCase("y"));
+				System.out.println("Are you sure you want to add this transaction?");
+				if(inS.next().equalsIgnoreCase("y")){
+					sT.updateStocks();
+					sTM.printOTrans(sTM.sizeS()-1);
+				} else{
+					sTM.rLOTrans();
+				}
+				sM.printSuppliers();
+				System.out.println("Do you want to add another transaction? (Y/N):");
+			}
+		} while(inS.next().equalsIgnoreCase("y"));
+		
+	}
+	
 	public void editItem(){
 		int search;
 		Double unitPrice;
@@ -206,7 +312,7 @@ public class MainProg{
 				sP = inS.nextDouble();
 				System.out.print("Enter package sell price: ");
 				pSP = inS.nextDouble();
-				wR.getLI().addSuppBundle(sM.getLS(), sP, u, m, pSP, bN, N);
+				c.addSuppBundle(sM.getLS(), sP, u, m, pSP, bN, N);
 			} else{
 				System.out.print("Updating package...");
 				System.out.print("Enter how much supplier "+sM.getLS().getName()+" sells 1 "+u+": ");
@@ -217,10 +323,99 @@ public class MainProg{
 		}
 	}
 	
+	public void buySupply(){
+		System.out.println("\nSegment: buying supply");
+		Item i;
+		Bundle b;
+		String s;
+		int ctr, count;
+		Double d;
+		Calendar c;
+		Date d1;
+		Supplier suppT;
+		STransaction sT = null;
+		do{
+			System.out.println("Known items supplied by suppliers:");
+			wR.printItems();
+			System.out.print("Enter item's number: ");
+			i = wR.getItem(inS.nextInt());
+			
+			System.out.println("Known packages of "+i.getBrandName()+" "+i.getName()+" supplied by suppliers:");
+			i.printBundles();
+			System.out.print("Enter bundle's number: ");
+			b = i.getBundle(inS.nextInt());
+			
+			System.out.println("Suppliers and their corresponding price for the package:");
+			b.printSuppliers();
+			System.out.print("Enter supplier's number: ");
+			ctr = inS.nextInt();
+			s = b.getSupplier(ctr);
+			d = b.elemHM(ctr);
+			
+			System.out.print("Do you want to create a transaction with Supplier "+s+"? (Y/N): ");
+			if(inS.next().equalsIgnoreCase("y")){
+				System.out.print("Enter Invoice: ");
+				iV = inS.next();
+				System.out.print("Enter how many will be bought: ");
+				count = inS.nextInt();
+				c = new GregorianCalendar();
+				c.set(Calendar.HOUR_OF_DAY, 0); //anything 0 - 23
+				c.set(Calendar.MINUTE, 0);
+				c.set(Calendar.SECOND, 0);
+				d1 = c.getTime(); 
+				sTM.addSTrans(new STransaction(iV, d1, s));
+				sT = sTM.getSTrans(sTM.sizeS()-1);
+				sT.addSell(b, d, count);
+				System.out.println("Do you want to add another item to this transaction? (Y/N):");
+				suppT = sM.searchSuppliers(s);
+				while(inS.next().equalsIgnoreCase("y")){
+					System.out.println("Items:");
+					suppT.printItems();
+					System.out.print("Enter item's number: ");
+					i = wR.getItem(inS.nextInt());
+					System.out.println("Known packages of "+i.getBrandName()+" "+i.getName()+" supplied by suppliers:");
+					i.printBundles(s);
+					System.out.print("Enter bundle's number: ");
+					b = i.getBundle(inS.nextInt());
+					System.out.println("Supplier and its price for the package:");
+					b.printSuppliers(s);
+					System.out.print("Enter supplier's number: ");
+					ctr = inS.nextInt();
+					s = b.getSupplier(ctr);
+					d = b.elemHM(ctr);
+					System.out.print("Enter how many will be bought: ");
+					count = inS.nextInt();
+					sT.addSell(b, d, count);
+					System.out.println("Do you want to add another item to this transaction? (Y/N):");
+				}
+				System.out.print("Enter terms of payment: ");
+				sT.setTerm(inS.nextInt());
+			}
+			System.out.println("Are you sure you want to add this transaction?");
+			if(inS.next().equalsIgnoreCase("y")){
+				sT.updateStocks();
+				sTM.printSTrans(sTM.sizeS()-1);
+				
+			} else{
+				sTM.rLSTrans();
+			}
+			sM.printSuppliers();
+			System.out.println("Do you want to add another transaction? (Y/N):");
+		} while(inS.next().equalsIgnoreCase("y"));
+		
+	}
+	
 	public void overW(){
 		if(inS.next().equalsIgnoreCase("y")){
 			sM.swap(bool, new Supplier(sN));//overwrites the supplier
 			wR.delSupplier(new Supplier(sN));
+		}
+	}
+	
+	public void overWO(){
+		if(inS.next().equalsIgnoreCase("y")){
+			System.out.print("Enter customer's contact number:");
+			oM.swap(bool, new Office(oN, inS.next()));//overwrites the supplier
 		}
 	}
 }

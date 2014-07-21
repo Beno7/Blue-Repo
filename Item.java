@@ -1,4 +1,5 @@
 
+package Logic;
 import java.util.HashMap;
 import java.util.List;
 import  java.util.ArrayList;
@@ -13,6 +14,7 @@ import  java.util.ArrayList;
  *
  * @author Win 7
  */
+
 public class Item {
     private String name;
     private String brandName;
@@ -142,6 +144,17 @@ public class Item {
 					packages.remove(i);
 				else
 					packages.remove(s);
+	}
+	
+	public void printBundles(){
+		for(int i = 0; i < sizeP(); i++)
+			System.out.println(i+". "+getBundle(i).getUnit()+" = "+getBundle(i).getMeasurement()+" "+getBrandName()+" "+getName());
+	}
+	
+	public void printBundles(String s){
+		for(int i = 0; i < sizeP(); i++)
+			if(getBundle(i).suppExist(s))
+				System.out.println(i+". "+getBundle(i).getUnit()+" = "+getBundle(i).getMeasurement()+" "+getBrandName()+" "+getName());
 	}
 
     public List<Supplier> getSuppliers() {

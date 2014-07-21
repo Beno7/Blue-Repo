@@ -4,40 +4,43 @@
  * and open the template in the editor.
  */
 
-package Logic;
 
+package Logic;
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  *
  * @author Win 7
  */
+
 public class Office {
     private String name;
-    private int contact;
-    private List<Transaction> history;
-    private Date dateOfTransaction;
+    private List<String> contacts;
+    private List<OTransaction> history;
     private int terms;
 
-    public Office(String name, int contact, Date dateOfTransaction, int terms) {
+    public Office(String name) {
         this.name = name;
-        this.contact = contact;
-        this.dateOfTransaction = dateOfTransaction;
-        this.terms = terms;
+		contacts = new ArrayList<String>();
+		history = new ArrayList<OTransaction>();
+    }
+	
+    public Office(String name, String contact) {
+        this.name = name;
+		contacts = new ArrayList<String>();
+        contacts.add(contact);
+		history = new ArrayList<OTransaction>();
     }
 
     
-    public void addTransaction(Transaction t){
-    
+    public void addOTransaction(OTransaction t){
+		history.add(t);
     }
     
-    public List<Transaction> getTransaction(){
-    
-    return history;
-    }
-    public void setDateOfTransaction(Date dateOfTransaction) {
-        this.dateOfTransaction = dateOfTransaction;
+    public List<OTransaction> getOTransaction(){
+		return history;
     }
 
     public void setName(String name) {
@@ -51,21 +54,17 @@ public class Office {
     public String getName() {
         return name;
     }
+	
+	public int sizeC(){
+		return contacts.size();
+	}
 
-    public int getContact() {
-        return contact;
+    public String getContact(int i) {
+        return contacts.get(i);
     }
 
-    public Date getDateOfTransaction() {
-        return dateOfTransaction;
+    public void addContact(String contact) {
+        contacts.add(contact);
     }
-
-    public void setContact(int contact) {
-        this.contact = contact;
-    }
-    
-    
-    
-    
-    
+	
 }

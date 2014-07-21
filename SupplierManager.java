@@ -3,6 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package Logic;
+
 import java.util.List;
 import java.util.ArrayList;
 /**
@@ -97,6 +99,7 @@ public class SupplierManager {
 				System.out.println("Name: "+k.getBundle(y).getUnit());
 				System.out.println("number of"+k.getBrandName()+" "+k.getName()+": "+k.getBundle(y).getMeasurement());
 				System.out.println("package sellprice: "+k.getBundle(y).getPackSellPrice());
+				System.out.println("Stocks: "+k.getBundle(y).getStocks());
 				System.out.println("Supplier's pricing:");
 				Bundle a = k.getBundle(y);
 				for(int z = 0; z < a.getHMSize(); z++)

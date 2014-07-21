@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 
+package Logic;
+
 import java.util.HashMap;
 import java.util.ArrayList;
 
@@ -18,6 +20,7 @@ public class Bundle {
 	private HashMap<String, Double> prices;
 	private ArrayList<String> supp;
 	private String brandName, name;
+	private int stocks;
 
 	public Bundle(String u, int m, Double pSP, String bN, String N){
 		setUnit(u);
@@ -25,7 +28,9 @@ public class Bundle {
 		setPackSellPrice(pSP);
 		supp = new ArrayList<String>();
 		prices = new HashMap<String, Double>();
-		
+		setBrandName(bN);
+		setName(N);
+		setStocks(0);
 	}
 	
 	public void delSupplier(String s){
@@ -61,6 +66,18 @@ public class Bundle {
 		return prices.size();
 	}
 	
+	public String getSupplier(int i){
+		return supp.get(i);
+	}
+	
+	public int getStocks(){
+		return stocks;
+	}
+	
+	public Double elemHM(int i){
+		return elemHM(supp.get(i));
+	}
+	
 	public Double elemHM(String s){
 		return prices.get(s);
 	}
@@ -72,6 +89,20 @@ public class Bundle {
     public void setMeasurement(int measurement) {
         this.measurement = measurement;
     }
+	
+	public void addStocks(int a){
+		setStocks(stocks += a);
+	}
+	
+	public void subtractStocks(int a){
+		setStocks(stocks -= a);
+	}
+	
+	public boolean checkStocks(int a){
+		if((stocks-a)>=0)
+			return true;
+		return false;
+	}
 	
 	public void addSuppPrice(Supplier s, Double p){
 		prices.put(s.getName(), p);
@@ -89,6 +120,7 @@ public class Bundle {
     public void setBrandName(String brandName) {
         this.brandName = brandName;
     }
+	
 
     public void setName(String name) {
         this.name = name;
@@ -97,6 +129,27 @@ public class Bundle {
     public String getBrandName() {
         return brandName;
     }
+	
+	public void setStocks(int a){
+		this.stocks = a;
+	}
+	
+	public void printSuppliers(){
+		for(int i = 0; i <getHMSize(); i++)
+			System.out.println(i+". "+supp.get(i)+": "+elemHM(supp.get(i)));
+	}
+	
+	public void printSuppliers2(){
+		System.out.println(". Stocks: "+getStocks()+" Price: "+getPackSellPrice());
+	}
+	
+	public void printSuppliers(String s){
+		for(int i = 0; i <getHMSize(); i++)
+			if(supp.get(i).equalsIgnoreCase(s)){
+				System.out.println(i+". "+supp.get(i)+": "+elemHM(supp.get(i)));
+				break;
+				}
+	}
 
     public String getName() {
         return name;

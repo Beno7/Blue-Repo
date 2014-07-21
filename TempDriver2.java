@@ -16,7 +16,7 @@ class TempDriver2{
 		int search;*/
 		
 		MainProg m = new MainProg();
-		m.addSupplier();//adds supplier
+		m.addSupplier();
 		m.buySupply();
 		m.addOffice();
                 m.sellSupply();

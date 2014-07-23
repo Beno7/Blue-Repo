@@ -61,13 +61,13 @@ public class OfficeManager{
 		setAllOffice(oI.getAllOffice());
 		return offices;
 	}
-        
-        public void printAllTransactions(){
+        //
+        public void printAllTransactions(OTManager oTM){
             setAllOffice(oI.getAllOffice());
             for(int i = 0; i < sizeO(); i++){
-                getO(i).setHistory();
-                for(int j = 0; j < getO(i).sizeH(); j++)
-                    getO(i).getH(j).printTrans();
+                oTM.setHistory(getO(i).getName());
+                for(int j = 0; j < oTM.sizeH(); j++)
+                    oTM.getH(j).printTrans();
             }
         }
     

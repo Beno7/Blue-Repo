@@ -1,4 +1,8 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package Logic;
 
 import java.util.List;
@@ -62,14 +66,13 @@ public class SupplierManager {
         System.out.print("Contact number: ");
         System.out.println(getS(i).getContact());
 	}
-        
-        public void printAllTransactions(){
+        //
+        public void printAllTransactions(STManager sTM){
             setAllSupplier(sI.getAllSupplier());
             for(int i = 0; i < sizeS(); i++){
-                getS(i).setHistory();
-                for(int j = 0; j < getS(i).sizeH(); j++){
-                    getS(i).getH(j).printTrans();
-                    //getS(i).getH(j).printBreakDown();
+                sTM.setHistory(getS(i).getName());
+                for(int j = 0; j < sTM.sizeH(); j++){
+                    sTM.getH(j).printTrans();
                 }
             }
         }

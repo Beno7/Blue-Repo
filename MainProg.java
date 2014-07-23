@@ -24,15 +24,17 @@ public class MainProg{
 	private	int bool;//to check if supplier exists in db
 	private	SupplierManager sM;
 	private OfficeManager oM;
-	private TransactionDB sTM;
 	private BundleManager bM;
+	private STManager sTM;
+	private OTManager oTM;
 	
 	public MainProg(){
 		this.inS = new Scanner(System.in);
 		this.wR = new WRInventory();
 		this.sM = new SupplierManager();
 		this.oM = new OfficeManager();
-		this.sTM = new TransactionDB();
+		this.sTM = new STManager();
+		this.oTM = new OTManager();
 		this.bM = new BundleManager();
 	}
 	
@@ -55,7 +57,7 @@ public class MainProg{
 			else{
 				System.out.print("Supplier already exists, overwrite? (y/n):");
 				overW();
-			}*///
+			}*/
 			do{
 				System.out.print("Enter item's brand:");
 				bN = inS.next().toUpperCase();
@@ -280,9 +282,9 @@ public class MainProg{
 			System.out.println("Are you sure you want to add this transaction?");
 			if(inS.next().equalsIgnoreCase("y")){
 				sT.updateStocks();
-                                sM.getS(s).addSTransaction(sT);
+                                sTM.addSTransaction(sT);
                                 sT.updateBundleList();
-				sM.printAllTransactions();
+				sM.printAllTransactions(sTM);
 			} 
 			sM.printSuppliers();
 			System.out.println("Do you want to add another transaction? (Y/N):");
@@ -341,9 +343,9 @@ public class MainProg{
 				System.out.println("Are you sure you want to add this transaction?");
 				if(inS.next().equalsIgnoreCase("y")){
 					sT.updateStocks();
-                                        oM.getO(o.getName()).addOTransaction(sT);
+                                        oTM.addOTransaction(sT);
                                         sT.updateBundleList();
-                                        oM.printAllTransactions();
+                                        oM.printAllTransactions(oTM);
 				} 
 				oM.printOffices();
 				System.out.println("Do you want to add another transaction? (Y/N):");
